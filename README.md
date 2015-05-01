@@ -11,14 +11,10 @@ tasks. This is NOT intended to be used for band promotion, but is rather meant t
 project convenient access to the same content. 
 
 <h4> Live demos: </h4>
-<p>Alpha: http://www.daves-data.com/Bandmaster/ </p>
-<p>Beta: http://www.daves-data.com/BandMaster_beta</p>
-<p>These are both still very much works in progress. The beta is being updated and tested daily, so please do not
-	 be suprised if it is particularly unstable. Enjoy!</p>
-
+<p>Beta: http://www.daves-data.com/BandMaster_final</p>
 
 <h4>File Structure</h4>
-Within the assests folder there are subdirectories for CSS, images, and JavaScript. The CSS folder contains styling for the 
+Within the assests folder there are subdirectories for CSS, Images, and JavaScript. The CSS folder contains styling for the 
 admin, public, and login pages. 
 
 The images folder contains icons used for the built-in media player.
@@ -30,4 +26,4 @@ The templates folder contains all files which are to be copied over to user acco
 store user data, such as their personal settings, list of songs, and their task list. The templates folder also contains the same assets folder mentioned above, though with only the Bandmaster.js file in the JavaScript subdirectory. Additionally there are PHP files used for the uploading and removing of files and tasks. 
 
 
-The PHP files in the repository's root directory are used for account creation, authentication, and login. Admin.php is used to control the entire admin page experience.
+The PHP files in the repository's root directory and login_assets directory are used for account creation, authentication, and login. Admin.php is used to control the entire admin page experience.
