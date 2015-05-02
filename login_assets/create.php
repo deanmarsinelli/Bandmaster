@@ -94,6 +94,7 @@ function startCreation() {
   $name = $_POST["username"];
 
   // check if the user exists or not. if not, create the account
+  // Also includes username validation.
   if (checkUser($name)) {
     echo FAILURE;
   } else if ($name == "assets" 
@@ -101,10 +102,12 @@ function startCreation() {
          || $name == "templates" 
          || $name == "" 
          || !$name )
- {
+ { 
     echo RESTRICTED;
+    //Checks if the username exceeds 25 characters.
   } else if(strlen($name) > 25){
     echo TOO_LONG;
+    //Checks for special characters in a username.
   } else if (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $name)){
     echo SPECIAL;
   } else {

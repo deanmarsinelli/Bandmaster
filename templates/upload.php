@@ -71,7 +71,8 @@
               break;
             }
           }
-
+          
+          //Update songs.json
           $result = json_encode($data);
           file_put_contents('JSON/songs.json', $result);
           unset($result);

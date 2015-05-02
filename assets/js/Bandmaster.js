@@ -107,6 +107,7 @@ bandmaster.controller("bandmasterCtrl", function ($scope, $http, $window) {
     }
   };
 
+  //Rests the audio player, called when a new song is selected or a song end.
   $scope.reset = function (){
         console.log("reset called");
         myAudio.currentTime = 0;
@@ -116,8 +117,8 @@ bandmaster.controller("bandmasterCtrl", function ($scope, $http, $window) {
         bar.style.width = 0;
   }
   
-  
-
+  // Adds the currently selected song's information and list of associated files to the 
+  // center pane.
   $scope.updateInfoPanel = function (i) {
     // activate the song information panel
     $("#infoPanel").html("");
@@ -134,8 +135,6 @@ bandmaster.controller("bandmasterCtrl", function ($scope, $http, $window) {
     }
     $("#infoTable").append("</table>");
   }
-
-
 
 
   // Toggles the playback. Pauses if playing, plays if paused.
@@ -201,16 +200,13 @@ bandmaster.controller("bandmasterCtrl", function ($scope, $http, $window) {
       globalpath = "";
     } else if (client === 'public') {
       path = $scope.path;
-
       path = path.substring(17, path.length - 1);
-
       console.log("modified path:" + path);
       path = "";
       globalpath = "../../";
-
     }
 
-    console.log("path is:" + path);
+    //console.log("path is:" + path);
 
     var progress = document.getElementById('progress');
     var myAudio = document.getElementById('my-audio');
@@ -232,10 +228,16 @@ bandmaster.controller("bandmasterCtrl", function ($scope, $http, $window) {
 
     //Continously updates the current time of the song and moves the playhead accordingly.
     myAudio.addEventListener('timeupdate', function () {
+
+      //Sets the remaining time and current time in the song
       $scope.timeSpent = Math.floor(myAudio.currentTime);
       $scope.timeRemaining = Math.floor(myAudio.duration) - Math.floor(myAudio.currentTime);
       $scope.$apply();
 
+
+      // This is used to make sure the play head does not get pushed out of the progress
+      // bar. Checks the distance from the edge, if the distance is too small, the playhead
+      // is fixed.
       if (!playheadClicked) {
       
         var rt = $('#bar').offset().left + $('#bar').outerWidth();
@@ -339,17 +341,16 @@ bandmaster.controller("bandmasterCtrl", function ($scope, $http, $window) {
   }; // end load()
 
   //Allows for the toggling of playback using the space bar.
-
-  //var taskInput = $('#taskInput');
-
   var keyValid = true;
 
+  //Checks if the user presses the enter key, allowing them to add a task. 
   $('#taskInput').keydown(function (e) {
     if (e.which === 13) {
       $scope.addTask();
     }
   });
 
+  // Checks if the user presses the space bar, used to toggle playback. 
   $(document).keydown(function (e) {
     if (e.which === 32 && !($('input').is(':focus')) && keyValid) {
       e.preventDefault();
@@ -362,6 +363,8 @@ bandmaster.controller("bandmasterCtrl", function ($scope, $http, $window) {
     keyValid = true;
   });
 
+
+  //Used to generate a green circle effect when the user is doing drag-and-drop. 
   var counter = 0;
   var droppingFile = false;
 
@@ -373,7 +376,7 @@ bandmaster.controller("bandmasterCtrl", function ($scope, $http, $window) {
       if (!droppingFile) {
         //console.log("this guy");
         droppingFile = true;
-
+        
         $("#green_circle").css({
           "-webkit-transform": "scale( 2 )",
           "-moz-transform": "scale( 2 )",
@@ -434,7 +437,6 @@ bandmaster.controller("bandmasterCtrl", function ($scope, $http, $window) {
     $http.get(path + 'JSON/taskList.json').success(function (data) {
       $scope.taskList = data;
     });
-
   };
 
   /*
@@ -565,59 +567,62 @@ bandmaster.controller("bandmasterCtrl", function ($scope, $http, $window) {
       }
     });
   }
-  var eventFormStr = '<form class="cmxform" name="addEvent" id="addEvent" method="post" action="javascript:void(0);">'
-      +'<table class="formAlign">'
-        +'<tr>'
-          +'<td>'
-            +'<label for="event_name" class="label">Name:</label>'
-          +'</td>'
-          +'<td>'
-            +'<input name="event_name" type="text" id="cevent_name" value="">'
-            +'<span id="error_event_name"></span>'
-          +'</td>'
-        +'</tr>'
-        +'<tr>'
-          +'<td>'
-            +'<label for="event_location" class="label">Location:</label>'
-          +'</td>'
-          +'<td>'
-            +'<input name="event_location" type="text" id="cevent_location" value="">'
-            +'<span id="error_event_location"></span>'
-          +'</td>'
-        +'</tr>'
-        +'<tr id="dateForm">'
-          +'<td>'
-            +'<label class="label">When:</label>'
-          +'</td>'
-          +'<td>'
-            +'<!-- div tag used here to group each label/input/error placement -->'
-            +'<div>'
-              +'<label for="date_start" class="label">Date:</label>'
-              +'<input name="date_start" type="text" class="date start" id ="cdate_start"/>'
-              +'<span id="error_date_start"></span>'
-            +'</div>'
-            +'<div>'
-              +'<label for="time_start" class="label">Time:</label>'
-              +'<input name="time_start" type="text" class="time start" id="ctime_start"/>'
-              +'<span id="error_time_start"></span>'
-            +'</div>'
-            +'<label class="label">to</label><br>'
-            +'<div>'
-              +'<label for="time_end" class="label">Time:</label>'
-              +'<input name="time_end" type="text" class="time end" id="ctime_end"/>'
-              +'<span id="error_time_end"></span>'
-            +'</div>'
-            +'<div>'
-              +'<label for="date_end" class="label">Date:</label>'
-              +'<input name="date_end" type="text" class="date end" id="cdate_end"/>'
-              +'<span id="error_date_end"></span>'
-            +'</div>'
-          +'</td>'
-        +'</tr>'
+  
+    //String used to create a modal for adding events. Used in $scope.eventModal()
+    var eventFormStr = '<form class="cmxform" name="addEvent" id="addEvent" method="post" action="javascript:void(0);">'
+        +'<table class="formAlign">'
+          +'<tr>'
+            +'<td>'
+              +'<label for="event_name" class="label">Name:</label>'
+            +'</td>'
+            +'<td>'
+              +'<input name="event_name" type="text" id="cevent_name" value="">'
+              +'<span id="error_event_name"></span>'
+            +'</td>'
+          +'</tr>'
+          +'<tr>'
+            +'<td>'
+              +'<label for="event_location" class="label">Location:</label>'
+            +'</td>'
+            +'<td>'
+              +'<input name="event_location" type="text" id="cevent_location" value="">'
+              +'<span id="error_event_location"></span>'
+            +'</td>'
+          +'</tr>'
+          +'<tr id="dateForm">'
+            +'<td>'
+              +'<label class="label">When:</label>'
+            +'</td>'
+            +'<td>'
+              +'<!-- div tag used here to group each label/input/error placement -->'
+              +'<div>'
+                +'<label for="date_start" class="label">Date:</label>'
+                +'<input name="date_start" type="text" class="date start" id ="cdate_start"/>'
+                +'<span id="error_date_start"></span>'
+              +'</div>'
+              +'<div>'
+                +'<label for="time_start" class="label">Time:</label>'
+                +'<input name="time_start" type="text" class="time start" id="ctime_start"/>'
+                +'<span id="error_time_start"></span>'
+              +'</div>'
+              +'<label class="label">to</label><br>'
+              +'<div>'
+                +'<label for="time_end" class="label">Time:</label>'
+                +'<input name="time_end" type="text" class="time end" id="ctime_end"/>'
+                +'<span id="error_time_end"></span>'
+              +'</div>'
+              +'<div>'
+                +'<label for="date_end" class="label">Date:</label>'
+                +'<input name="date_end" type="text" class="date end" id="cdate_end"/>'
+                +'<span id="error_date_end"></span>'
+              +'</div>'
+            +'</td>'
+          +'</tr>'
       +'</table>'
       +'<input type="hidden" name="user_name" value=' + username + '>'
     +'</form>';
 
+  //Shows modal to user to create calendar events. 
   $scope.eventModal = function(){  
     $('#eventDialog').html(eventFormStr);
     $("#eventDialog").dialog({
@@ -637,18 +642,8 @@ bandmaster.controller("bandmasterCtrl", function ($scope, $http, $window) {
     });
     eventValidate();
   }
-    
-  $scope.showName = function (songObject, index) {
-    //console.log(songObject.name);
-    //console.log(index);
-    deleteFile(index, songObject.name);
-    console.log("worked?");
-  };
 
-  $scope.startDownload = function (name) {
-    console.log("Downloads currently disabled.");
-    //window.open("http://davesdata.x10host.com/uploads/" + name);
-  };
+
 }); //End bandmaster.controller
 
 //Custom filter for the song lengths. As these are not stored as strings, the colon

@@ -85,7 +85,7 @@
     <script>var thisPath = location.pathname;</script>
     <script>
      window.onload = function() {
-      // random number between 0 and 3
+      // random number between 0 and 3, used to select and random background. 
       var num = Math.floor((Math.random() * 4));
       $('body').css('background', '#000 url(../../backgrounds/' + num + '.jpg) no-repeat');
       $('body').css('background-size', '100%');
@@ -152,7 +152,7 @@
 
       <!-- RIGHT pane containing task list and calendar-->
       <div class="col-md-4 hubPane">
-		    <div id="calendar"></div>
+        <div id="calendar"></div>
         <div id="eventDialog" title="" style="display:none;"></div>
         <div id="toDoList">
           <!-- table for task list -->

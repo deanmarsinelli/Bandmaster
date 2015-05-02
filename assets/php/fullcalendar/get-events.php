@@ -1,5 +1,18 @@
 <?php
 
+/*
+      Bandmaster
+      get-events.php
+      authors: David Lordan, Paul Karcher, Dean Marsinelli, the fullcalendar team
+      last updated: 5/1/2015
+
+      This file fetches the calendar data for the 
+      administrator page and the public page by loading the
+      user's event.json calendar data. We modified this
+      file to get it pointing at the correct user's data
+      by passing it a username.
+*/
+
 //--------------------------------------------------------------------------------------------------
 // This script reads event data from a JSON file and outputs those events which are within the range
 // supplied by the "start" and "end" GET parameters.
@@ -39,9 +52,15 @@ $log = fopen("cal_log.txt", "a");
   fwrite($log, 'user is: ' . $username . "\n");
   
 
-
+/*
+  This was the modified code to allow it to load a specific
+  user's calendar data based on which current user is logged on and 
+  trying to access it.
+ */
 //$json_path =  $username . 'JSON/events.json';
 $jsonpath = '../../../' . $username . '/JSON/events.json';
+
+
 // Read and parse our events JSON file into an array of event data arrays.
 $json = file_get_contents($jsonpath);
 $input_arrays = json_decode($json, true);
